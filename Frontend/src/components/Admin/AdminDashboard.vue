@@ -105,7 +105,8 @@
           const response = await axios.delete(`http://localhost:5000/api/delete-event/${eventId}`);
           if (response.data.status === 'success') {
             alert(response.data.message);
-            this.fetchEvents(); // Refresh events list after deletion
+            this.fetchEvents();
+            this.$router.push("/admin-dashboard");
           } else {
             alert('Failed to delete event: ' + response.data.message);
           }
