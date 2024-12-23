@@ -42,7 +42,7 @@ api.add_resource(GetUsersAPI, '/api/get-users')
 api.add_resource(RemoveUserAPI, '/api/remove-user')
 api.add_resource(UserTasksAPI, '/api/user-tasks/<int:userid>')
 api.add_resource(UpdateUserTaskStatusAPI, '/api/update-task-status')
-# api.add_resource(UserStatusAPI, '/api/user-status')
+api.add_resource(UserStatusAPI, '/api/user-status/<int:user_id>')
 
 
 

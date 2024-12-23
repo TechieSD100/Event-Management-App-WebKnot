@@ -1,27 +1,18 @@
-# from flask import jsonify, request
-# from flask_restful import Resource
-# from models.database import db
-# from models.models import User
+from flask import jsonify
+from flask_restful import Resource
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from models.database import db
+from models.models import User  # Assuming User is your user model
 
+class UserStatusAPI(Resource):
+    # @jwt_required()
+    def get(self, user_id):
+        try:
+            # Fetch the user details from the database
+            user = User.query.filter_by(userid = user_id).first()
+            if user.removed == 1:
+                return {"status": "success"}, 200
 
-# class UserStatusAPI(Resource):
-#     def get(self):
-#         try:
-#             # Get the user ID from request headers (or adjust as needed to extract from JWT/session)
-#             user_id = request.headers.get('User-ID')  # Replace with your actual user identification logic
-            
-#             if not user_id:
-#                 return jsonify({'status': 'fail', 'message': 'User ID is required'}), 400
-
-#             # Query the User table for the provided user_id
-#             user = User.query.filter_by(userid=user_id).first()
-
-#             if not user:
-#                 return jsonify({'status': 'fail', 'message': 'User not found'}), 404
-
-#             return jsonify({
-#                 'status': 'success',
-#                 'removed': user.removed
-#             }), 200
-#         except Exception as e:
-#             return jsonify({'status': 'fail', 'message': str(e)}), 500
+        except Exception as e:
+            # Ensure all errors are handled and return JSON
+            return {"status": "error", "message": str(e)}, 500

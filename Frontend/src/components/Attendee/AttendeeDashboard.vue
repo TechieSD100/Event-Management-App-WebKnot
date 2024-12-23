@@ -1,60 +1,119 @@
 <template>
-    <section class="vh-100 background3">
-        <AttendeeNav/>
-        <div class="container height-adjust">
-            <div class="container main-content">
-            <div class="container front">
-                <h1 class="display text-center">Welcome to the Event Management App</h1>
-            </div>
-            <h1 class="heading">List of Events</h1>
-  
-  <div class="row">
-    <!-- Event Cards -->
-    
-    <div v-if="events.length" class="col-md-4 mt-4" v-for="event in events" :key="event.event_id">
-      <div class="card profile-card-5 userpc">
-        <div class="card-img-block">
-          <img
-            class="card-img-top"
-            src="../../assets/img/events/event2.jpg"
-            alt="Card image cap"
-            style="border-radius: 15px;"
-          />
+  <section class="vh-100 background3">
+    <AttendeeNav />
+    <div class="container height-adjust">
+      <div class="container main-content">
+        <div class="container front">
+          <h1 class="display text-center">Welcome to the Event Management App</h1>
         </div>
-        <div class="card-body pt-0">
-          <h5 class="card-title">{{ event.event_name }}</h5>
-          <p class="card-text">{{ event.description }}</p>
-          <div class="row" style="padding-left: 5px; padding-right: 10px; padding-bottom: 10px">
-            <div class="col">
-              <p class="card-text text-left" style="font-size: 20px;"><b>{{ event.location }}</b></p>
+        <h1 class="heading">List of Events</h1>
+        <div class="row">
+          <!-- Event Cards -->
+          <div v-if="events.length" class="col-md-4 mt-4" v-for="event in events" :key="event.event_id">
+            <div class="card profile-card-5 userpc">
+              <div class="card-img-block">
+                <img
+                  class="card-img-top"
+                  src="../../assets/img/events/event2.jpg"
+                  alt="Card image cap"
+                  style="border-radius: 15px;"
+                />
+              </div>
+              <div class="card-body pt-0">
+                <h5 class="card-title">{{ event.event_name }}</h5>
+                <p class="card-text">{{ event.description }}</p>
+                <div class="row" style="padding-left: 5px; padding-right: 10px; padding-bottom: 10px">
+                  <div class="col">
+                    <p class="card-text text-left" style="font-size: 20px;"><b>{{ event.location }}</b></p>
+                  </div>
+                  <div class="col">
+                    <p class="card-text" style="font-size: 20px; text-align: right;"><b>{{ formatDate(event.event_date) }}</b></p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col">
-              <p class="card-text" style="font-size: 20px; text-align: right;"><b>{{ formatDate(event.event_date) }}</b></p>
+          </div>
+          <!-- No Events Disclaimer -->
+          <div v-else class="col-12 text-center">
+            <br />
+            <div class="alert alert-danger" role="alert">
+              <h5>No events are available as of now.</h5>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-
-    <!-- No Events Disclaimer -->
-    <div v-else class="col-12 text-center">
-      <br />
-      <div class="alert alert-danger" role="alert">
-        <h5>No events are available as of now.</h5>
-      </div>
-        </div>
-        </div>
-        </div>
-        </div>
-    </section>
-
-    <div class="full fixed-top" v-if="isRemoved == 1">
+    <div class="full fixed-top" v-if="isUserRemoved">
       <h4 class="centered-text" style="color: red;">Your account has been removed by the admin.</h4>
-      <p>Please contact the admin to seek for validity.</p><br>
+      <p>Please contact the admin to seek validity.</p><br>
       <a class="btn btn-danger" @click="logout0">Logout</a>
     </div>
+  </section>
 </template>
+
+<script>
+import AttendeeNav from './AttendeeNav.vue';
+import axios from 'axios';
+
+export default {
+  name: 'AttendeeDashboard',
+  components: {
+    AttendeeNav,
+  },
+  data() {
+  return {
+    events: [],
+    isUserRemoved: false,
+    userId: localStorage.getItem("user_id"),
+  };
+},
+mounted() {
+  this.checkUserStatus();
+  this.fetchEvents();
+},
+methods: {
+  async checkUserStatus() {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/user-status/${this.userId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
+      });
+      if (response.data.status === 'success') {
+        this.isUserRemoved = true;
+      } else {
+        this.isUserRemoved = false;
+      }
+    } catch (error) {
+      console.error('Error fetching user status:', error.response?.data || error.message);
+    }
+  },
+  async fetchEvents() {
+    try {
+      const response = await axios.get('http://localhost:5000/api/events', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
+      });
+      if (response.data.status === 'success') {
+        this.events = response.data.events;
+      } else {
+        console.error('Failed to fetch events: ', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error.response?.data || error.message);
+    }
+  },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+      return date.toLocaleDateString('en-GB', options); // Format as DD-MM-YYYY
+    },
+    logout0() {
+      localStorage.removeItem('access_token');
+      this.$router.push('/login');
+      window.alert('You are logged out.');
+    },
+  },
+};
+</script>
+
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
@@ -118,7 +177,7 @@ background: linear-gradient(135deg, rgba(25,126,153,1) 0%, rgba(103,7,194,1) 24%
 }
 </style>
 
-<script>
+<!-- <script>
 import AttendeeNav from './AttendeeNav.vue';
 import axios from 'axios';
 
@@ -163,4 +222,4 @@ export default{
     }
     },
 };
-</script>
+</script> -->
