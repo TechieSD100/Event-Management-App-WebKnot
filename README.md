@@ -16,7 +16,7 @@ python3 -m venv pkg-env
 ```sh
 source pkg-env/bin/activate
 ```
-4. Install all dependencies.
+4. Install all backend dependencies.
 ```sh
 pip3 install -r requirements.txt
 ```
