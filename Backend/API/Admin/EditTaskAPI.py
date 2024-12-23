@@ -45,7 +45,7 @@ class UpdateTaskDetailsAPI(Resource):
             parser = reqparse.RequestParser()
             parser.add_argument('task_name', required=True, help="Task name is required")
             parser.add_argument('description', required=True, help="Description is required")
-            parser.add_argument('status', type=int, required=True, help="Status is required")
+            parser.add_argument('status', type=int, required=False)  # Updated to optional
             parser.add_argument('assigned_user_id', type=int, required=False)
             args = parser.parse_args()
             
@@ -56,8 +56,12 @@ class UpdateTaskDetailsAPI(Resource):
             
             task.task_name = args['task_name']
             task.description = args['description']
-            task.status = args['status']
-            db.session.commit()
+
+            # Determine and set task status based on assigned user
+            if args['assigned_user_id']:
+                task.status = 1  # Task is assigned
+            else:
+                task.status = 0  # Task is not assigned
 
             # Update task assignment
             if args['assigned_user_id']:
@@ -82,7 +86,7 @@ class GetUsersAPI(Resource):
     def get(self):
         try:
             # Query users with the role "attendee"
-            attendees = User.query.filter_by(role="attendee").all()
+            attendees = User.query.filter_by(role="attendee", removed=0).all()
             attendee_list = [{"userid": user.userid, "username": user.username} for user in attendees]
             
             return {"status": "success", "users": attendee_list}, 200
