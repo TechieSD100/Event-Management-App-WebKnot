@@ -30,7 +30,7 @@ python3 app.py   # For Linux/Mac
 python app.py    # For Windows
 ```
 ### Run the Frontend:
-6. Open a CMD terminal and navigate to the Frontend folder.
+6. Open another CMD terminal and navigate to the Frontend folder.
 ```sh
 cd Frontend
 ```
