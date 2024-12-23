@@ -47,7 +47,7 @@ Open your browser and navigate to:
 ```sh
 http://localhost:5173
 ```
-##### Access to Admin Dashboard:
+### Access to Admin Dashboard:
 ```sh
 Admin Username: Admin1
 ```
