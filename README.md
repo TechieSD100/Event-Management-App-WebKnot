@@ -47,3 +47,7 @@ Open your browser and navigate to:
 ```sh
 http://localhost:5173
 ```
+##### Access to Admin Dashboard:
+Admin Username: Admin1
+Admin Password: admin123
+(Since Admin cannot be created, please use these login details to access its dashboard.)
