@@ -22,6 +22,10 @@
 
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
+                  <p :class="{'alert-success': loginSuccess, 'alert-danger': !loginSuccess}" v-if="loginMessage" style="color: red;">
+                    {{ loginMessage }}
+                  </p>
+
                   <div data-mdb-input-init class="form-outline mb-4">
                     <input type="email" id="useremail" class="form-control form-control-lg" v-model="email" />
                     <label class="form-label" for="useremail">Email address</label>
@@ -83,29 +87,35 @@ export default {
     };
   },
   methods: {
-    handleLogin() {
-      const loginData = {
-        email: this.email,
-        password: this.password
-      };
-      axios.post("http://127.0.0.1:5000/api/login", loginData)
-        .then((response) => {
-          if (response.data.status === "success") {
-            this.loginMessage = "Login Successful!";
-            this.loginSuccess = true;
-            const userId = response.data.user.userid;
-            this.$router.push(`/attendee-dashboard/${userId}`); // Redirect to dashboard or another page
-          } else {
-            this.loginMessage = response.data.message;
-            this.loginSuccess = false;
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          this.loginMessage = "An error occurred during the login process.";
+  handleLogin() {
+    const loginData = {
+      email: this.email,
+      password: this.password,
+    };
+
+    axios.post("http://127.0.0.1:5000/api/login", loginData)
+      .then((response) => {
+        if (response.data.status === "success") {
+          this.loginMessage = "Login Successful!";
+          this.loginSuccess = true;
+          const userId = response.data.user.userid;
+          localStorage.setItem('user_id', userId);
+          this.$router.push(`/attendee-dashboard/${userId}`); // Redirect to dashboard
+        } else {
+          this.loginMessage = response.data.message; // Backend error message
           this.loginSuccess = false;
-        });
-    }
-  }
+        }
+      })
+      .catch((error) => {
+        // Handle errors from the backend
+        if (error.response && error.response.data) {
+          this.loginMessage = error.response.data.error_message || "An error occurred.";
+        } else {
+          this.loginMessage = "A network error occurred. Please try again.";
+        }
+        this.loginSuccess = false;
+      });
+  },
+},
 };
 </script>

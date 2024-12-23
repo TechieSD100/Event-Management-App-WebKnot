@@ -23,17 +23,17 @@
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Create a new account</h5>
 
                   <div data-mdb-input-init class="form-outline mb-4">
-                    <input type="text" id="username" class="form-control form-control-lg" v-model="username" />
+                    <input type="text" id="username" class="form-control form-control-lg" required v-model="username" />
                     <label class="form-label" for="username">Name</label>
                   </div>
 
                   <div data-mdb-input-init class="form-outline mb-4">
-                    <input type="email" id="useremail" class="form-control form-control-lg" v-model="email" />
+                    <input type="email" id="useremail" class="form-control form-control-lg" required v-model="email" />
                     <label class="form-label" for="useremail">Email address</label>
                   </div>
 
                   <div data-mdb-input-init class="form-outline mb-4">
-                    <input type="password" id="userpass" class="form-control form-control-lg" v-model="password" />
+                    <input type="password" id="userpass" class="form-control form-control-lg" required v-model="password" />
                     <label class="form-label" for="userpass">Password</label>
                   </div>
 

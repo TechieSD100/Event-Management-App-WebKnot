@@ -18,7 +18,7 @@ class LoginAPI(Resource):
             raise BusinessValidationError(
                 status_code=400,
                 error_code="BE101",
-                error_message="Email and password are required!"
+                error_message="Please enter both email and password!"
             )
 
         # Check if user exists

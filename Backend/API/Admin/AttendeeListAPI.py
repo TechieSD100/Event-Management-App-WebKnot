@@ -81,3 +81,27 @@ class AssignTaskAPI(Resource):
             db.session.rollback()
             return jsonify({'status': 'fail', 'message': str(e)})
 
+
+
+class RemoveUserAPI(Resource):
+    def post(self):
+        # Parse input data
+        parser = reqparse.RequestParser()
+        parser.add_argument('userid', type=int, required=True, help="User ID is required.")
+        args = parser.parse_args()
+        userid = args['userid']
+
+        try:
+            # Update user's removed status to 1
+            user = User.query.get(userid)
+            if not user:
+                return jsonify({'status': 'fail', 'message': 'User not found.'})
+
+            user.removed = 1
+            db.session.commit()
+
+            return jsonify({'status': 'success', 'message': 'User removed successfully.'})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'status': 'fail', 'message': str(e)})
+

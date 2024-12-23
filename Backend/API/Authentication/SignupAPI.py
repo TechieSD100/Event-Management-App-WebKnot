@@ -22,7 +22,7 @@ class SignupAPI(Resource):
             raise BusinessValidationError(status_code=400, error_code="BE103", error_message="The same registered email already exists!")
 
         # Create new user and save to database with the "attendee" role
-        new_user = User(username=username, email=email, password=hash_password(password), role='attendee')
+        new_user = User(username=username, email=email, password=hash_password(password), role='attendee', removed=0)
         db.session.add(new_user)
         db.session.commit()
 

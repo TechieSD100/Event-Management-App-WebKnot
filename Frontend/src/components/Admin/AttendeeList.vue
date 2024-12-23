@@ -31,8 +31,9 @@
             <button @click="assignTask(attendee.userid)" class="btn btn-light">Assign</button>
           </div>
           <div class="col-auto">
-            <div class="btn btn-dark text-center">Remove</div>
+            <button @click="removeUser(attendee.userid)" class="btn btn-dark text-center">Remove</button>
           </div>
+
         </div>
       </div>
       <div v-else class="alert alert-warning text-center">
@@ -41,7 +42,7 @@
     </div>
 
     <div class="container text-center mt-2" style="padding-top: 30px;">
-      <router-link to="#" class="btn btn-outline-light btn-custom1">Create New Attendee</router-link>
+      <router-link to="/admin-dashboard/attendee-list/add-attendee" class="btn btn-outline-light btn-custom1">Add New Attendee</router-link>
     </div>
   </section>
 </template>
@@ -91,6 +92,28 @@ export default {
         console.error('Error fetching tasks:', error);
       }
     },
+    async removeUser(userid) {
+        if (!confirm('Are you sure you want to remove this user?')) {
+            return;
+        }
+        try {
+            const response = await axios.post(
+                'http://localhost:5000/api/remove-user',
+                { userid },
+                { headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` } }
+            );
+            if (response.data.status === 'success') {
+                alert(response.data.message);
+                // Refresh the attendees list
+                this.attendees = this.attendees.filter(attendee => attendee.userid !== userid);
+            } else {
+                alert(response.data.message);
+            }
+        } catch (error) {
+            console.error('Error removing user:', error);
+            alert('Failed to remove user. Please try again.');
+        }
+    },
     async assignTask(userid) {
       const taskId = this.selectedTask[userid];
       if (!taskId) {
@@ -135,6 +158,10 @@ export default {
     font-size: 20px;
     border-radius: 0px;
     padding: 12px 25px;
+  }
+
+  .btn-custom1:hover{
+    background-color: rgba(180, 236, 255, 0.8);
   }
   .background2 {
     background: rgb(92, 0, 131);

@@ -39,6 +39,10 @@ api.add_resource(AssignTaskAPI, '/api/assign-task')
 api.add_resource(GetTaskDetailsAPI, '/api/task/<int:task_id>')
 api.add_resource(UpdateTaskDetailsAPI, '/api/task/<int:task_id>/update')
 api.add_resource(GetUsersAPI, '/api/get-users')
+api.add_resource(RemoveUserAPI, '/api/remove-user')
+api.add_resource(UserTasksAPI, '/api/user-tasks/<int:userid>')
+api.add_resource(UpdateUserTaskStatusAPI, '/api/update-task-status')
+# api.add_resource(UserStatusAPI, '/api/user-status')
 
 
 

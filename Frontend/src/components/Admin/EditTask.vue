@@ -39,7 +39,7 @@
                                     <option v-for="user in users" :key="user.userid" :value="user.userid">
                                         {{ user.username }}
                                     </option>
-                                    <option :value="null">Assign Later</option>
+                                    <option :value="0">Assign Later</option>
                                 </select>
                             </div>
 

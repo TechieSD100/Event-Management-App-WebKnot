@@ -10,6 +10,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), nullable=False)
     active = db.Column(db.Boolean, default=True)
+    removed = db.Column(db.Integer)
 
     @property
     def id(self):

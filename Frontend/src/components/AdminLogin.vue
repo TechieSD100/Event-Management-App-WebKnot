@@ -22,6 +22,10 @@
 
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
+                  <p :class="{'alert-success': loginSuccess, 'alert-danger': !loginSuccess}" v-if="loginMessage" style="color: red;">
+                    {{ loginMessage }}
+                  </p>
+
                   <div data-mdb-input-init class="form-outline mb-4">
                     <input type="text" id="username" class="form-control form-control-lg" v-model="username"/>
                     <label class="form-label" for="username">Username</label>
@@ -100,46 +104,46 @@ export default {
     };
   },
   methods: {
-    handleAdminLogin() {
+  handleAdminLogin() {
+    if (!this.username || !this.password) {
+      this.loginMessage = "Please enter both username and password!";
+      this.loginSuccess = false;
+      return;
+    }
 
-      if (!this.username || !this.password) {
-          alert("Please Enter Both fields!");
-          return;
-      }
-      const loginData = {
-        username: this.username,
-        password: this.password,
-      };
+    const loginData = {
+      username: this.username,
+      password: this.password,
+    };
 
-      axios
-        .post('http://127.0.0.1:5000/api/admin-login', loginData)
-        .then((response) => {
-          if (response.data.status === 'success') {
-            this.loginMessage = 'Admin Login Successful!';
-            this.loginSuccess = true;
+    axios
+      .post("http://127.0.0.1:5000/api/admin-login", loginData)
+      .then((response) => {
+        if (response.data.status === "success") {
+          this.loginMessage = "Admin Login Successful!";
+          this.loginSuccess = true;
 
-            localStorage.setItem("access_token", response.data.access_token);
-            localStorage.setItem("user_role", 'admin'); // Set user role
-            // Redirect to admin dashboard
-            // const adminId = response.data.admin.user_id;
-            this.$router.push("/admin-dashboard");
-          } else {
-            alert("Invalid Credentials!");
-            this.loginMessage = response.data.message;
-            this.loginSuccess = false;
-          }
-        })
-        .catch((error) => {
-          if (error.response && error.response.data.error_message) {
-            this.loginMessage = error.response.data.error_message;
-            alert(error.response.data.error_message);
-          } else {
-            this.loginMessage = 'An error occurred during the login process.';
-            alert("An error occurred while logging in!");
-          }
+          localStorage.setItem("access_token", response.data.access_token);
+          localStorage.setItem("user_role", "admin"); // Set user role
+
+          // Redirect to admin dashboard
+          this.$router.push("/admin-dashboard");
+        } else {
+          this.loginMessage = response.data.message; // Backend error message
           this.loginSuccess = false;
-        });
-    },
+        }
+      })
+      .catch((error) => {
+        // Handle errors from the backend
+        if (error.response && error.response.data.error_message) {
+          this.loginMessage = error.response.data.error_message;
+        } else {
+          this.loginMessage = "An error occurred while logging in.";
+        }
+        this.loginSuccess = false;
+      });
   },
+},
+
 };
 </script>

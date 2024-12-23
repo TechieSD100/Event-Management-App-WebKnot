@@ -9,6 +9,9 @@ import AttendeeList from './components/Admin/AttendeeList.vue';
 import EventDashboard from './components/Admin/EventDashboard.vue';
 import CreateTask from './components/Admin/CreateTask.vue';
 import EditTask from './components/Admin/EditTask.vue';
+import CreateAttendee from './components/Admin/CreateAttendee.vue';
+import AttendeeDashboard from './components/Attendee/AttendeeDashboard.vue';
+import AssignedTasks from './components/Attendee/AssignedTasks.vue';
 
 
 
@@ -23,7 +26,10 @@ const routes = [
     { name: 'AttendeeList', component: AttendeeList, path: '/admin-dashboard/attendee-list' },
     { name: 'EventDashboard', component: EventDashboard, path: '/admin-dashboard/event-dashboard/:eventId' },
     { name: 'CreateTask', component: CreateTask, path: '/admin-dashboard/event-dashboard/:eventId/create-task' },
-    { name: 'EditTask', component: EditTask, path: '/admin-dashboard/event-dashboard/:eventId/edit-task/:taskId' }
+    { name: 'EditTask', component: EditTask, path: '/admin-dashboard/event-dashboard/:eventId/edit-task/:taskId' },
+    { name: 'CreateAttendee', component: CreateAttendee, path:'/admin-dashboard/attendee-list/add-attendee' },
+    { name: 'AttendeeDashboard', component: AttendeeDashboard, path:'/attendee-dashboard/:userId' },
+    { name: 'AssignedTasks', component: AssignedTasks, path:'/attendee-dashboard/:userId/task-list' }
 ]
 
 // Creating router instance

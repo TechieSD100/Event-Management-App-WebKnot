@@ -22,3 +22,5 @@ from API.Admin.AttendeeListAPI import *
 from API.Admin.EventDashboardAPI import *
 from API.Admin.CreateTaskAPI import *
 from API.Admin.EditTaskAPI import *
+from API.Attendee.AssignTasksAPI import *
+from API.Attendee.AttendeeDashboardAPI import *
