@@ -37,7 +37,7 @@ npm install
 ```sh
 npm run dev
 ```
-### Usage:
+## Usage:
 Open your browser and navigate to:
 ```sh
 http://localhost:5173
